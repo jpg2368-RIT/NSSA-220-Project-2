@@ -9,15 +9,16 @@ def filter(packets, layer) :
 	return filteredPackets
 
 
-
 def main() :
 	filePath = "./Captures/"
 	filename = "Node1.pcap"
 	packets = rdpcap(filePath + filename)
 	layer="ICMP"
-	
-	filteredPackets = filter(packets, layer, filteredPackets)
 
+	filteredPackets = filter(packets, layer)
+
+	for packet in filteredPackets:
+		print(packet)
 	
 
 if __name__=="__main__":
