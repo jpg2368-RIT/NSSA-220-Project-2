@@ -16,16 +16,16 @@ def filter(file, layer) :
 	
 	with open(directory + filename + "_filtered.txt", "w") as output_file:
 		packets = rdpcap(file)
-		# filtered_packets=[]
+		filtered_packets=[]
 		for packet in packets:
 			if packet.haslayer(layer):
-				# filtered_packets.append(packet)
-				pass
+				output_file.write(packet[Raw].load.hex())
+
 				# need to manually convert the raw info from scapy to human readeable format like Node1.txt
 
 def file_exists(file):
     try:
-        with open(file, 'r'):
+        with open(file, "r"):
             return True
     except FileNotFoundError:
         return False
@@ -50,20 +50,20 @@ def split_file(file):
 	filename = filename_extension[:last_dot]
 	extension = filename_extension[last_dot:]
 
-	print ("\nfile:", file, "\ndirectory:", directory,"\nfilename:", filename, "\nextension:", extension)
 	return directory, filename, extension
+
+def format_pcap(packet):
+	pass
 
 def main() :
 	directory = "./Captures/"
-	file = "Node1.pcap"
-	packets = rdpcap(directory + file)
+	file = "example.pcap"
 	layer="ICMP"
 
 	filter(directory + file, layer)
 
 	# for packet in filteredPackets:
 		# print(hexdump(packet))
-	
 
 if __name__=="__main__":
 	main()
