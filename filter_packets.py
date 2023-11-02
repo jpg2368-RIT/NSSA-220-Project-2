@@ -1,29 +1,22 @@
-# sudo pip3 install scapy
-from scapy.all import *
-
-WIRESHARK_EXTENSION = ".pcap"
+import re
 
 # check if file exist and is pcap, then create filtered txt
 def filter(file, layer) :
 	directory, filename, extension = split_file(file)
 
-	if not file_exists(file):
+	if not file_exist(file):
 		print(file, "does not exist!")
 		return False
-	elif WIRESHARK_EXTENSION != extension:
-		print(filename + extension, "must contain", WIRESHARK_EXTENSION, "extension!")
-		return False
 	
-	with open(directory + filename + "_filtered.txt", "w") as output_file:
-		packets = rdpcap(file)
-		filtered_packets=[]
-		for packet in packets:
-			if packet.haslayer(layer):
-				output_file.write(packet[Raw].load.hex())
+	with open(file) as input_file:
+		gen = extract_packet(input_file)
+		with open(directory + filename + "_filtered.txt", "w") as output_file:
+			for packet in gen:
+				if re.search(layer, packet):
+					print(packet)
+					output_file.write(packet)			
 
-				# need to manually convert the raw info from scapy to human readeable format like Node1.txt
-
-def file_exists(file):
+def file_exist(file):
     try:
         with open(file, "r"):
             return True
@@ -52,18 +45,76 @@ def split_file(file):
 
 	return directory, filename, extension
 
-def format_pcap(packet):
-	pass
+# extracts packet starting from header
+def extract_packet(file):
+	start_extract = False
+	packet = ""
+	for line in file:
+		"""
+		Truth Table
+		X	Y	X ^ Y    X ^ (X ^ Y)
+		0	0	0        0	
+		0	1	1        1  
+		1	0	1        0  
+		1	1	0        1  
+		"""
+		# start extracting if header match and is not extracting. Stop when header match and is extracting
+		if (not start_extract and bool(re.match("^No\.", line))):
+			start_extract = not start_extract
+		if start_extract and bool(re.match("^No\.", line)):
+			yield packet
+			packet = line
+		elif start_extract:
+			packet += line
+
+	yield packet
+
+
+# # extracts packet starting from header
+# def extract_packets(file):
+# 	start_extract = False
+# 	packet = ""
+# 	for line in file:
+# 		"""
+# 		Truth Table
+# 		X	Y	X ^ Y    X ^ (X ^ Y)
+# 		0	0	0        0	
+# 		0	1	1        1  
+# 		1	0	1        0  
+# 		1	1	0        1  
+# 		"""
+# 		# start extracting if header match and is not extracting. Stop when header match and is extracting
+# 		if (start_extract ^ (start_extract ^ bool(re.match("^No\.", line)))):
+# 			start_extract = not start_extract
+# 		if start_extract:
+# 			packet += line
+
+# 	print(packet)
+# 	return packet
+		
+# # extracts packet starting from header
+# def extract_packet(file):
+# 	start_extract = False
+# 	packet = ""
+# 	for line in file:
+# 		# start extracting if header match and is not extracting. Stop when header match and is extracting
+# 		if bool(re.match("No\.", line)):
+# 			start_extract = not start_extract
+# 		if start_extract:
+# 			packet += line
+# 		else:
+# 			yield packet
+# 			packet = line
+# 			start_extract = not start_extract
+# 	yield packet
 
 def main() :
 	directory = "./Captures/"
-	file = "example.pcap"
+	file = "Node1.txt"
 	layer="ICMP"
 
 	filter(directory + file, layer)
 
-	# for packet in filteredPackets:
-		# print(hexdump(packet))
 
 if __name__=="__main__":
 	main()
