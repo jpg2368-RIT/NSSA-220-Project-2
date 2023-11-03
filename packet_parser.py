@@ -13,7 +13,7 @@ def packet_dictionary(packet):
 	cleaned_lines = []
 	for line in lines:
 		# cleaned_lines.append(" ".join(line.split()))
-		
+
 		# split line into array by whitespace
 		cleaned_lines.append(line.split())
 	
@@ -35,7 +35,7 @@ def packet_dictionary(packet):
 				packet_dict["Hex"] += cleaned_lines[i][j] + " "
 	
 	# Keys is the header
-	['No.', 'Time', 'Source', 'Destination', 'Protocol', 'Length', 'Info', 'Hex']
+	# ['No.', 'Time', 'Source', 'Destination', 'Protocol', 'Length', 'Info', 'Hex']
 	
 	return packet_dict
 
