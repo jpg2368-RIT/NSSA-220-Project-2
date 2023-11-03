@@ -8,13 +8,15 @@ def filter(file, layer) :
 		print(file, "does not exist!")
 		return False
 	
-	with open(file) as input_file:
-		gen = extract_packet(input_file)
-		with open(directory + filename + "_filtered.txt", "w") as output_file:
-			for packet in gen:
-				if re.search(layer, packet):
-					print(packet)
-					output_file.write(packet)			
+	with open(directory + filename + "_filtered.txt", "w") as output_file:
+		index = 0
+		while True:
+			packet, index = extract_packet(file, index)
+			if packet == "":
+				break
+			if re.search(layer, packet):
+				print(packet)
+				output_file.write(packet)			
 
 def file_exist(file):
     try:
@@ -46,67 +48,24 @@ def split_file(file):
 	return directory, filename, extension
 
 # extracts packet starting from header
-def extract_packet(file):
+def extract_packet(file, index = 0):
 	start_extract = False
 	packet = ""
-	for line in file:
-		"""
-		Truth Table
-		X	Y	X ^ Y    X ^ (X ^ Y)
-		0	0	0        0	
-		0	1	1        1  
-		1	0	1        0  
-		1	1	0        1  
-		"""
-		# start extracting if header match and is not extracting. Stop when header match and is extracting
-		if (not start_extract and bool(re.match("^No\.", line))):
-			start_extract = not start_extract
-		if start_extract and bool(re.match("^No\.", line)):
-			yield packet
-			packet = line
-		elif start_extract:
-			packet += line
+	with open(file) as file:
+		for _ in range(index):
+			next(file)
+		for line in file:
+			header_match = bool(re.search("^No\.", line))
+			# start extracting if header match and is not extracting. Stop when header match and is extracting
+			if not start_extract and header_match:
+				start_extract=True
+			elif start_extract and header_match:
+				return packet, index
+			if start_extract:
+				packet += line
+				index += 1
 
-	yield packet
-
-
-# # extracts packet starting from header
-# def extract_packets(file):
-# 	start_extract = False
-# 	packet = ""
-# 	for line in file:
-# 		"""
-# 		Truth Table
-# 		X	Y	X ^ Y    X ^ (X ^ Y)
-# 		0	0	0        0	
-# 		0	1	1        1  
-# 		1	0	1        0  
-# 		1	1	0        1  
-# 		"""
-# 		# start extracting if header match and is not extracting. Stop when header match and is extracting
-# 		if (start_extract ^ (start_extract ^ bool(re.match("^No\.", line)))):
-# 			start_extract = not start_extract
-# 		if start_extract:
-# 			packet += line
-
-# 	print(packet)
-# 	return packet
-		
-# # extracts packet starting from header
-# def extract_packet(file):
-# 	start_extract = False
-# 	packet = ""
-# 	for line in file:
-# 		# start extracting if header match and is not extracting. Stop when header match and is extracting
-# 		if bool(re.match("No\.", line)):
-# 			start_extract = not start_extract
-# 		if start_extract:
-# 			packet += line
-# 		else:
-# 			yield packet
-# 			packet = line
-# 			start_extract = not start_extract
-# 	yield packet
+	return packet, index
 
 def main() :
 	directory = "./Captures/"
