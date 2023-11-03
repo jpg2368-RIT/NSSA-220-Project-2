@@ -3,17 +3,18 @@ import re
 # check if file exist and is pcap, then create filtered txt
 def filter(file, layer) :
 	directory, filename, extension = split_file(file)
+	filtered_file = directory + filename + "_filtered.txt"
 
 	if not file_exist(file):
 		print(file, "does not exist!")
 		return False
 	with open(file) as input_file:
 		packet_generator = extract_packet(input_file)
-		with open(directory + filename + "_filtered.txt", "w") as output_file:
+		with open(filtered_file, "w") as output_file:
 			for packet in packet_generator:
 				if re.search(layer, packet):
-					# print(packet)
-					output_file.write(packet)			
+					output_file.write(packet)
+	return filtered_file			
 
 def file_exist(file):
     try:
