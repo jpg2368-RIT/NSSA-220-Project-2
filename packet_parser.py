@@ -9,14 +9,16 @@ def parse(file) :
 	return packets
 
 def packet_dictionary(packet):
+	"""
+	For testing purpose:
+
+	"""
 	lines = packet.split("\n")
 	cleaned_lines = []
 	for line in lines:
-		# cleaned_lines.append(" ".join(line.split()))
-
-		# split line into array by whitespace
 		cleaned_lines.append(line.split())
 	
+	# ['No.', 'Time', 'Source', 'Destination', 'Protocol', 'Length', 'Info', 'Hex']
 	header = None
 	packet_dict = {"Hex" : ""}
 	for i in range(len(cleaned_lines)):
@@ -26,6 +28,7 @@ def packet_dictionary(packet):
 				continue
 			if i == 1:
 				for j in range(len(cleaned_lines[i])):
+					# The rest of array will output to Info since Info contain whitespaces
 					if j < len(header):
 						packet_dict[header[j]] = cleaned_lines[i][j]
 					else:
@@ -34,13 +37,17 @@ def packet_dictionary(packet):
 			for j in range(1, len(cleaned_lines[i]) - 1):
 				packet_dict["Hex"] += cleaned_lines[i][j] + " "
 	
-	# Keys is the header
-	# ['No.', 'Time', 'Source', 'Destination', 'Protocol', 'Length', 'Info', 'Hex']
-	
 	return packet_dict
 
 def main():
-	parse("./Captures/example_filtered.txt")
+	packets = parse("./Captures/example_filtered.txt")
+
+	# for packet in packets:
+	# 	print()
+	# 	print(packet["Hex"])
+
+	# print(packets[0]["Hex"])
+		
 
 if __name__ == "__main__":
 	main()
