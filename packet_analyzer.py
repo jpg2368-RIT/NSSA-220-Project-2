@@ -5,11 +5,15 @@ from compute_metrics import *
 
 def main():
     num_nodes = 4
+    node_ips = ["192.168.100.1", "192.168.100.2", "192.168.200.1", "192.168.200.2"]
+    if num_nodes != len(node_ips):
+        print(f"Number of nodes ({num_nodes}) does not equal number of IPs ({len(node_ips)})")
+        exit(1)
     for i in range(num_nodes):
-        filtered_packets = filter(f"./Captures/Node{i}.pcap", "ICMP")
-        parsed_metrics = parse(filtered_packets)
-        computed_metrics = compute(parsed_metrics)
-        print(f"Node {i} metrics:")
+        filtered_packets_file = filter(f"./Captures/Node{i+1}.txt", "ICMP")
+        parsed_metrics = parse(filtered_packets_file)
+        computed_metrics = compute(parsed_metrics, node_ips[i])
+        print(f"Node {i+1} metrics:")
         print(f"\tNumber of echo requests sent:\t{computed_metrics[0]}")
         print(f"\tNumber of echo requests received:\t{computed_metrics[1]}")
         print(f"\tNumber of Echo replies sent:\t{computed_metrics[2]}")
