@@ -93,10 +93,8 @@ def compute(packets, ip):
         # Distance metric
         # ============================
         # average number of hops per echo request
-        try:
-            hops.append(255 - int(split_info[5][4::1]))
-        except:
-            pass
+        hops.append(255 - int(split_info[5][4::1]))
+
         # Time-based metrics
         # ============================
         # TODO: average round trip time in ms (computed at end)
@@ -109,7 +107,6 @@ def compute(packets, ip):
     goodput = sum(request_data_sent) / sum(round_trips)
 
     # temp
-
 
     # TODO: average reply delay in microseconds
     # time between receiving request and sending corresponding reply
