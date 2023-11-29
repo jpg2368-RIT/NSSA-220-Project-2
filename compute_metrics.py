@@ -87,13 +87,17 @@ def compute(packets, ip):
         # num echo replies received
         if "reply" in packet["Info"] and packet["Destination"] is ip:
             num_echo_replies_received += 1
+            # TODO: fix this
             # other = find_packet_from_seq(packets, between(split_info[4], "=", "/"))
             round_trips.append(float(other["Time"]) - float(packet["Time"]))
 
         # Distance metric
         # ============================
         # average number of hops per echo request
-        hops.append(255 - int(split_info[5][4::1]))
+        try:
+            hops.append(255 - int(split_info[5][4::1]))
+        except:
+            pass
 
         # Time-based metrics
         # ============================
@@ -101,16 +105,26 @@ def compute(packets, ip):
         # time between echo request and corresponding reply (ms)
 
     # throughput
-    thruput = sum(request_bytes_sent) / sum(round_trips)
+    try:
+        thruput = sum(request_bytes_sent) / sum(round_trips)
+    except:
+        thruput = "placeholder"
 
     # goodput
-    goodput = sum(request_data_sent) / sum(round_trips)
+    try:
+        goodput = sum(request_data_sent) / sum(round_trips)
+    except:
+        goodput = "placeholder"
 
     # temp
 
     # TODO: average reply delay in microseconds
     # time between receiving request and sending corresponding reply
-
-    return (num_echo_requests_sent, num_echo_requests_received, num_echo_replies_sent, num_echo_replies_received,
-            request_bytes_sent, request_bytes_received, request_data_sent, request_data_received,
-            statistics.mean(round_trips), thruput, goodput, statistics.mean(delays), statistics.mean(hops))
+    try:
+        return (num_echo_requests_sent, num_echo_requests_received, num_echo_replies_sent, num_echo_replies_received,
+                sum(request_bytes_sent), sum(request_bytes_received), sum(request_data_sent), sum(request_data_received),
+                statistics.mean(round_trips), thruput, goodput, statistics.mean(delays), statistics.mean(hops))
+    except:
+        return (num_echo_requests_sent, num_echo_requests_received, num_echo_replies_sent, num_echo_replies_received,
+                sum(request_bytes_sent), sum(request_bytes_received), sum(request_data_sent), sum(request_data_received),
+                "placeholder", thruput, goodput, "placeholder", "placeholder")
