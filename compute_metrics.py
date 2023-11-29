@@ -108,6 +108,9 @@ def compute(packets, ip):
     # goodput
     goodput = sum(request_data_sent) / sum(round_trips)
 
+    # temp
+
+
     # TODO: average reply delay in microseconds
     # time between receiving request and sending corresponding reply
 
