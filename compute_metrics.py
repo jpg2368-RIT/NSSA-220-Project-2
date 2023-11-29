@@ -17,8 +17,8 @@ def between(string, char1, char2):
 
 def find_packet_from_seq(packets, seq):
     for packet in packets:
-        split_info = packet.split(" ")
-        if packet.between(split_info[4], "=", "/") == seq:
+        split_info = packet["Info"].split(" ")
+        if between(split_info[3], "=", "/") == seq:
             return packet
 
 
