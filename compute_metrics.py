@@ -18,7 +18,7 @@ def between(string, char1, char2):
 def find_packet_from_seq(packets, seq):
     for packet in packets:
         split_info = packet["Info"].split(" ")
-        if between(split_info[3], "=", "/") == seq:
+        if between(split_info[4], "=", "/") == seq:
             return packet
 
 
@@ -51,7 +51,7 @@ def compute(packets, ip):
         split_info = packet["Info"].split(" ")
         # Data size metrics
         # ==========================
-        if split_info[1] == "request":
+        if split_info[2] == "request":
             # num echo requests sent, request bytes sent, request data sent
             if packet["Source"] == str(ip):
                 num_echo_requests_sent += 1
@@ -64,6 +64,18 @@ def compute(packets, ip):
                 request_bytes_received.append(int(packet["Length"]))
                 request_data_received.append(int(packet["Length"]) - 42)
                 rec_request_packets.append(packet)
+        elif split_info[2] == "reply":
+            # num echo replies sent
+            if packet["Source"] == str(ip):
+                num_echo_replies_sent += 1
+                # TODO: Does not handle when find_packet_from_seq does not find the packet. Will return None and cause crash on float(other["Time"]) - float(packet["Time"])
+                other = find_packet_from_seq(rec_request_packets, split_info[8][:-1])
+                delays.append(float(other["Time"]) - float(packet["Time"]))
+            # num echo replies received
+            elif packet["Destination"] == str(ip):
+                num_echo_replies_received += 1
+                other = find_no(open_request_packets, split_info[8][:-1])
+                round_trips.append(float(other["Time"]) - float(packet["Time"]))
 
         # # num echo requests sent, request bytes sent, request data sent
         # if split_info[1] == "request" and packet["Source"] == str(ip):
@@ -81,17 +93,6 @@ def compute(packets, ip):
         #     request_data_received.append(int(packet["Length"]) - 42)
         #     rec_request_packets.append(packet)
 
-        if split_info[1] == "reply":
-            # num echo replies sent
-            if packet["Source"] == str(ip):
-                num_echo_replies_sent += 1
-                other = find_packet_from_seq(rec_request_packets, split_info[7][:-1])
-                delays.append(float(other["Time"]) - float(packet["Time"]))
-            # num echo replies received
-            elif packet["Destination"] == str(ip):
-                num_echo_replies_received += 1
-                other = find_no(open_request_packets, split_info[7][:-1])
-                round_trips.append(float(other["Time"]) - float(packet["Time"]))
 
         # # num echo replies sent
         # if split_info[1] == "reply" and packet["Source"] == str(ip):
