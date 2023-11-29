@@ -1,53 +1,23 @@
 import re
+import os
 
 
 # check if file exist and is pcap, then create filtered txt
-def filter(file, layer):
-    directory, filename, extension = split_file(file)
-    filtered_file = directory + filename + "_filtered.txt"
-
-    if not file_exist(file):
-        print(file, "does not exist!")
+def filter(path, layer):
+    if not os.path.isfile:
         return False
-    with open(file) as input_file:
+    
+    directory, filename_and_extension = os.path.split(path)
+    filename, extension = os.path.splitext(filename_and_extension)
+    filtered_file = os.path.join(directory, filename + "_filtered.txt")
+
+    with open(path) as input_file:
         packet_generator = extract_packet(input_file)
         with open(filtered_file, "w") as output_file:
             for packet in packet_generator:
                 if re.search(layer, packet):
                     output_file.write(packet)
     return filtered_file
-
-
-def file_exist(file):
-    try:
-        with open(file, "r"):
-            return True
-    except FileNotFoundError:
-        return False
-
-
-# split input into directory, filename, and extension
-def split_file(file):
-    """
-		For testing purpose
-		# print("last slash dot index:", last_slash, last_dot)
-		# print(file)
-		# print ("directory", directory,"\nfilename:", filename, "\nextension:", extension)
-	"""
-
-    last_slash = file.rfind("/") + 1
-    # end at specific index
-    directory = file[:last_slash]
-    filename_extension = file[last_slash:]
-
-    last_dot = filename_extension.rfind(".")
-    if last_dot == -1:
-        last_dot = len(filename_extension)
-    filename = filename_extension[:last_dot]
-    extension = filename_extension[last_dot:]
-
-    return directory, filename, extension
-
 
 # extracts packet starting from header
 def extract_packet(file):
@@ -66,7 +36,6 @@ def extract_packet(file):
 
     yield packet
 
-
 def main():
     directory = "./Captures/"
     file = "Node1.txt"
@@ -74,7 +43,6 @@ def main():
 
     filter(directory + file, layer)
 
-
 if __name__ == "__main__":
     main()
-# split_file("./testing/Project 2/version_96/.The.dothere.txt")
+
