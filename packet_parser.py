@@ -20,7 +20,7 @@ def packet_dictionary(packet):
     for line in lines:
         cleaned_lines.append(line.split())
 
-    # ['No.', 'Time', 'Source', 'Destination', 'Protocol', 'Length', 'Info', 'Hex']
+    # {'No.', 'Time', 'Source', 'Destination', 'Protocol', 'Length', 'Info', 'Hex'}
     header = None
     packet_dict = {"Hex": ""}
     for i in range(len(cleaned_lines)):
