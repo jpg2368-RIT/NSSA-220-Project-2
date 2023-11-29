@@ -1,20 +1,15 @@
 from filter_packets import extract_packet
 
 
-def parse(file):
+def parse(path):
     packets = []
-    with open(file) as file:
+    with open(path) as file:
         packet_generator = extract_packet(file)
         for packet in packet_generator:
             packets.append(packet_dictionary(packet))
     return packets
 
-
 def packet_dictionary(packet):
-    """
-	For testing purpose:
-
-	"""
     lines = packet.split("\n")
     cleaned_lines = []
     for line in lines:
@@ -41,17 +36,8 @@ def packet_dictionary(packet):
 
     return packet_dict
 
-
 def main():
     packets = parse("./Captures/example_filtered.txt")
-
-
-# for packet in packets:
-# 	print()
-# 	print(packet["Hex"])
-
-# print(packets[0]["Hex"])
-
 
 if __name__ == "__main__":
     main()

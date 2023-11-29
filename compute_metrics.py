@@ -45,7 +45,7 @@ def compute(packets, ip):
     open_request_packets = []
     rec_request_packets = []
 
-    # input: ['No.', 'Time', 'Source', 'Destination', 'Protocol', 'Length', 'Info', 'Hex']
+    # input: {'No.', 'Time', 'Source', 'Destination', 'Protocol', 'Length', 'Info', 'Hex'}
 
     for packet in packets:
         split_info = packet["Info"].split(" ")
