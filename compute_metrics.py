@@ -51,33 +51,59 @@ def compute(packets, ip):
         split_info = packet["Info"].split(" ")
         # Data size metrics
         # ==========================
-        # num echo requests sent, request bytes sent, request data sent
-        if split_info[1] == "request" and packet["Source"] == str(ip):
-            num_echo_requests_sent += 1
-            # Total request bytes sent
-            request_bytes_sent.append(int(packet["Length"]))
-            request_data_sent.append(int(packet["Length"]) - 42)
-            open_request_packets.append(packet)
+        if split_info[1] == "request":
+            # num echo requests sent, request bytes sent, request data sent
+            if packet["Source"] == str(ip):
+                num_echo_requests_sent += 1
+                request_bytes_sent.append(int(packet["Length"]))
+                request_data_sent.append(int(packet["Length"]) - 42)
+                open_request_packets.append(packet)
+            # num echo requests received, request bytes received, request data received
+            elif packet["Destination"] == str(ip):
+                num_echo_requests_received += 1
+                request_bytes_received.append(int(packet["Length"]))
+                request_data_received.append(int(packet["Length"]) - 42)
+                rec_request_packets.append(packet)
 
-        # num echo requests received, request bytes received, request data received
-        if split_info[1] == "request" and packet["Destination"] == str(ip):
-            num_echo_requests_received += 1
-            # total request bytes received
-            request_bytes_received.append(int(packet["Length"]))
-            request_data_received.append(int(packet["Length"]) - 42)
-            rec_request_packets.append(packet)
+        # # num echo requests sent, request bytes sent, request data sent
+        # if split_info[1] == "request" and packet["Source"] == str(ip):
+        #     num_echo_requests_sent += 1
+        #     # Total request bytes sent
+        #     request_bytes_sent.append(int(packet["Length"]))
+        #     request_data_sent.append(int(packet["Length"]) - 42)
+        #     open_request_packets.append(packet)
 
-        # num echo replies sent
-        if split_info[1] == "reply" and packet["Source"] == str(ip):
-            num_echo_replies_sent += 1
-            other = find_packet_from_seq(rec_request_packets, split_info[7][:-1])
-            delays.append(float(other["Time"]) - float(packet["Time"]))
+        # # num echo requests received, request bytes received, request data received
+        # if split_info[1] == "request" and packet["Destination"] == str(ip):
+        #     num_echo_requests_received += 1
+        #     # total request bytes received
+        #     request_bytes_received.append(int(packet["Length"]))
+        #     request_data_received.append(int(packet["Length"]) - 42)
+        #     rec_request_packets.append(packet)
 
-        # num echo replies received
-        if split_info[1] == "reply" and packet["Destination"] == str(ip):
-            num_echo_replies_received += 1
-            other = find_no(open_request_packets, split_info[7][:-1])
-            round_trips.append(float(other["Time"]) - float(packet["Time"]))
+        if split_info[1] == "reply":
+            # num echo replies sent
+            if packet["Source"] == str(ip):
+                num_echo_replies_sent += 1
+                other = find_packet_from_seq(rec_request_packets, split_info[7][:-1])
+                delays.append(float(other["Time"]) - float(packet["Time"]))
+            # num echo replies received
+            elif packet["Destination"] == str(ip):
+                num_echo_replies_received += 1
+                other = find_no(open_request_packets, split_info[7][:-1])
+                round_trips.append(float(other["Time"]) - float(packet["Time"]))
+
+        # # num echo replies sent
+        # if split_info[1] == "reply" and packet["Source"] == str(ip):
+        #     num_echo_replies_sent += 1
+        #     other = find_packet_from_seq(rec_request_packets, split_info[7][:-1])
+        #     delays.append(float(other["Time"]) - float(packet["Time"]))
+
+        # # num echo replies received
+        # if split_info[1] == "reply" and packet["Destination"] == str(ip):
+        #     num_echo_replies_received += 1
+        #     other = find_no(open_request_packets, split_info[7][:-1])
+        #     round_trips.append(float(other["Time"]) - float(packet["Time"]))
 
         # Distance metric
         # ============================
@@ -91,15 +117,17 @@ def compute(packets, ip):
         # ============================
         # TODO: average round trip time in ms (computed at end)
         # time between echo request and corresponding reply (ms)
-        #uagfhksdjkl;
+        #
 
     # throughput
+    # TODO: Add specific exception for good coding practice
     try:
         thruput = sum(request_bytes_sent) / sum(round_trips)
     except:
         thruput = "placeholder"
 
     # goodput
+    # TODO: Add specific exception for good coding practice
     try:
         goodput = sum(request_data_sent) / sum(round_trips)
     except:
