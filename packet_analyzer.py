@@ -29,6 +29,7 @@ def main():
         print(f"\tAverage reply delay:\t{computed_metrics[11]} microseconds")
         print("")
         print(f"\tAverage hops:{computed_metrics[12]}")
+        print(" ========================================================")
         print("\n")
 
 
