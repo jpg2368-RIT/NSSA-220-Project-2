@@ -59,6 +59,7 @@ def compute(packets: list, ip: str):
             request_data_sent.append(int(packet["Length"]) - HEADER_SIZE)
             open_request_packets.append(packet)
 
+
         # num echo requests received, request bytes received, request data received
         if split_info[2] == "request" and packet["Destination"] == ip:
             num_echo_requests_received += 1
@@ -66,6 +67,7 @@ def compute(packets: list, ip: str):
             request_bytes_received.append(int(packet["Length"]))
             request_data_received.append(int(packet["Length"]) - HEADER_SIZE)
             rec_request_packets.append(packet)
+
 
         # num echo replies sent
         if split_info[2] == "reply" and packet["Source"] == ip:
@@ -78,14 +80,13 @@ def compute(packets: list, ip: str):
             num_echo_replies_received += 1
             other = find_no(open_request_packets, int(split_info[8][:-1]))
             round_trips.append(float(other["Time"]) - float(packet["Time"]))
+            # Distance metric
+            # ============================
+            # average number of hops per echo request
+            hops.append(128 - int(split_info[5][4::1]) + 1)  # adding 1, prof that made it worded things weird i think
 
-        # Distance metric
-        # ============================
-        # average number of hops per echo request
-        try:
-            hops.append(255 - int(split_info[5][4::1]) + 1)  # adding 1, prof that made it worded things weird i think
-        except:
-            pass
+
+
 
         # Time-based metrics
         # ============================
