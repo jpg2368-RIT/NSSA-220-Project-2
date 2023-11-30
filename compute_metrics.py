@@ -2,7 +2,7 @@ import statistics
 
 
 def between(string, char1, char2):
-    num = ""
+    bet = ""
     reading = False
     for c in string:
         if c == char1:
@@ -11,14 +11,14 @@ def between(string, char1, char2):
         elif c == char2:
             break
         if reading:
-            num += c
-    return int(num)
+            bet += c
+    return bet
 
 
 def find_packet_from_seq(packets, seq):
     for packet in packets:
         split_info = packet["Info"].split(" ")
-        if between(split_info[3], "=", "/") == seq:
+        if int(between(split_info[3], "=", "/")) == int(seq):
             return packet
 
 
@@ -91,7 +91,6 @@ def compute(packets, ip):
         # ============================
         # TODO: average round trip time in ms (computed at end)
         # time between echo request and corresponding reply (ms)
-        #uagfhksdjkl;
 
     # throughput
     try:
