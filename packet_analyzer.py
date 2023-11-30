@@ -39,11 +39,11 @@ def main():
         print(f"\t\t\t{computed_metrics[4]}\t\t\t\t\t\t{computed_metrics[6]}")
         print(f"\tEcho Request Bytes Received:\tEcho Request Data Received (bytes):")
         print(f"\t\t\t{computed_metrics[5]}\t\t\t\t\t\t{computed_metrics[7]}")
-        print(f"\n\tAverage RTT (milliseconds):\t{computed_metrics[8]}")
-        print(f"\tEcho Request Throughput (kB/sec):\t{computed_metrics[9]}")
-        print(f"\tEcho Request Goodput (kB/sec):\t{computed_metrics[10]}")
-        print(f"\tAverage Reply Delay (microseconds):\t{computed_metrics[11]}")
-        print(f"\tAverage Echo Request Hop Count:\t{computed_metrics[12]}")
+        print(f"\n\tAverage RTT (milliseconds):\t{round(computed_metrics[8], 3)}")
+        print(f"\tEcho Request Throughput (kB/sec):\t{round(computed_metrics[9], 2)}")
+        print(f"\tEcho Request Goodput (kB/sec):\t{round(computed_metrics[10], 2)}")
+        print(f"\tAverage Reply Delay (microseconds):\t{round(computed_metrics[11], 3)}")
+        print(f"\tAverage Echo Request Hop Count:\t{round(computed_metrics[12], 3)}")
         print(" ========================================================\n")
 
 
