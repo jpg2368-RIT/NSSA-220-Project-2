@@ -2,12 +2,14 @@ from filter_packets import *
 from packet_parser import *
 from compute_metrics import *
 
-def variable_col_width(table_format, col_index, space_between = 5):
+
+def variable_col_width(table_format, col_index, space_between=5):
     max_col_width = 0
     for cols in table_format:
         if len(cols) > col_index and len(str(cols[col_index])) > max_col_width:
             max_col_width = len(cols[col_index])
     return max_col_width + space_between
+
 
 def main():
     # setup
@@ -19,13 +21,15 @@ def main():
 
     # compute and output data for each node
     for i in range(num_nodes):
-        filtered_packets_file = filter(f"./Captures/Node{i+1}.txt", "ICMP")
+        filtered_packets_file = filter(f"./Captures/Node{i + 1}.txt", "ICMP")
         parsed_metrics = parse(filtered_packets_file)
         computed_metrics = compute(parsed_metrics, node_ips[i])
 
         node_format = (
-            ('Echo Requests Sent', 'Echo Requests Received', 'Echo Replies Sent', 'Echo Replies Received'),
-            (computed_metrics[0], computed_metrics[1], computed_metrics[2], computed_metrics[3]),
+            ('Echo Requests Sent', 'Echo Requests Received'),
+            (computed_metrics[0], computed_metrics[1]),
+            ('Echo Replies Sent', 'Echo Replies Received'),
+            (computed_metrics[2], computed_metrics[3]),
             ('Echo Request Bytes Sent', 'Echo Request Data Sent'),
             (computed_metrics[4], computed_metrics[5]),
             ('Echo Request Bytes Received', 'Echo Request Data Received'),
@@ -37,13 +41,14 @@ def main():
             ('Average Reply Delay (microseconds)', f'{computed_metrics[11]:.3f}'),
             ('Average Echo Request Hop Count', f'{computed_metrics[12]:.3f}'))
 
-        print(f"Node {i+1} metrics:")
+        print(f"Node {i + 1} metrics:")
         for row in node_format:
             print("\t", end="")
             for i, col in enumerate(row):
                 print(f"{col:<{variable_col_width(node_format, i)}}", end="")
             print()
         print(" ========================================================\n")
+
 
 if __name__ == "__main__":
     main()
