@@ -2,6 +2,12 @@ from filter_packets import *
 from packet_parser import *
 from compute_metrics import *
 
+def variable_col_width(table_format, col_index, space_between = 5):
+    max_col_width = 0
+    for cols in table_format:
+        if len(cols) > col_index and len(str(cols[col_index])) > max_col_width:
+            max_col_width = len(cols[col_index])
+    return max_col_width + space_between
 
 def main():
     # setup
@@ -63,14 +69,12 @@ def main():
             ('Echo Request Goodput (kB/sec)', f'{computed_metrics[10]:.2f}'),
             ('Average Reply Delay (microseconds)', f'{computed_metrics[11]:.3f}'),
             ('Average Echo Request Hop Count', f'{computed_metrics[12]:.3f}'))
-        
-        col_width = 40
 
         print(f"Node {i+1} metrics:")
         for row in table_format:
             print("\t", end="")
-            for col in row:
-                print(f"{col:<{col_width}}", end="")
+            for i, col in enumerate(row):
+                print(f"{col:<{variable_col_width(table_format, i)}}", end="")
             print()
         print(" ========================================================\n")
 
