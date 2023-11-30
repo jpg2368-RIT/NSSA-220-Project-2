@@ -6,7 +6,7 @@ import os
 def filter(path, layer):
     if not os.path.isfile:
         return False
-    
+
     directory, filename_and_extension = os.path.split(path)
     filename, extension = os.path.splitext(filename_and_extension)
     filtered_file = os.path.join(directory, filename + "_filtered.txt")
@@ -18,6 +18,7 @@ def filter(path, layer):
                 if re.search(layer, packet):
                     output_file.write(packet)
     return filtered_file
+
 
 # extracts packet starting from header
 def extract_packet(file):
@@ -36,6 +37,7 @@ def extract_packet(file):
 
     yield packet
 
+
 def main():
     directory = "./Captures/"
     file = "Node1.txt"
@@ -43,6 +45,6 @@ def main():
 
     filter(directory + file, layer)
 
+
 if __name__ == "__main__":
     main()
-
