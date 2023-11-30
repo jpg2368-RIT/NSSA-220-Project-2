@@ -4,11 +4,14 @@ from compute_metrics import *
 
 
 def main():
+    # setup
     num_nodes = 4
     node_ips = ["192.168.100.1", "192.168.100.2", "192.168.200.1", "192.168.200.2"]
     if num_nodes != len(node_ips):
         print(f"Number of nodes ({num_nodes}) does not equal number of IPs ({len(node_ips)})")
         exit(1)
+
+    # compute and output data for each node
     for i in range(num_nodes):
         filtered_packets_file = filter(f"./Captures/Node{i+1}.txt", "ICMP")
         parsed_metrics = parse(filtered_packets_file)

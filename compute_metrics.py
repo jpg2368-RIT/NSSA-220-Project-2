@@ -1,6 +1,7 @@
 import statistics
 
 
+# gets the string between two chars
 def between(string: str, char1: str, char2: str) -> str:
     bet = ""
     reading = False
@@ -15,19 +16,14 @@ def between(string: str, char1: str, char2: str) -> str:
     return bet
 
 
-def find_packet_from_seq(packets: list, seq: int):
-    for packet in packets:
-        split_info = packet["Info"].split(" ")
-        if int(between(split_info[4], "=", "/")) == seq:
-            return packet
-
-
+# finds a packet in a list based on it's number
 def find_no(packets: list, no: int):
     for packet in packets:
         if int(packet["No."]) == no:
             return packet
 
 
+# does all the computing, returns a list with all the info
 def compute(packets: list, ip: str):
     num_echo_requests_sent = 0
     num_echo_requests_received = 0
@@ -37,8 +33,6 @@ def compute(packets: list, ip: str):
     request_bytes_received = []
     request_data_sent = []
     request_data_received = []
-    thruput = 0
-    goodput = 0
     round_trips = []
     delays = []
     hops = []
@@ -59,7 +53,6 @@ def compute(packets: list, ip: str):
             request_data_sent.append(int(packet["Length"]) - HEADER_SIZE)
             open_request_packets.append(packet)
 
-
         # num echo requests received, request bytes received, request data received
         if split_info[2] == "request" and packet["Destination"] == ip:
             num_echo_requests_received += 1
@@ -67,7 +60,6 @@ def compute(packets: list, ip: str):
             request_bytes_received.append(int(packet["Length"]))
             request_data_received.append(int(packet["Length"]) - HEADER_SIZE)
             rec_request_packets.append(packet)
-
 
         # num echo replies sent
         if split_info[2] == "reply" and packet["Source"] == ip:
@@ -85,9 +77,6 @@ def compute(packets: list, ip: str):
             # average number of hops per echo request
             hops.append(128 - int(split_info[5][4::1]) + 1)  # adding 1, prof that made it worded things weird i think
 
-
-
-
         # Time-based metrics
         # ============================
         # average round trip time in ms (computed at end)
@@ -99,11 +88,11 @@ def compute(packets: list, ip: str):
     # goodput
     goodput = sum(request_data_sent) / sum(round_trips)
 
-    # temp
-
     # average reply delay in microseconds
     # time between receiving request and sending corresponding reply
+
     return (num_echo_requests_sent, num_echo_requests_received, num_echo_replies_sent, num_echo_replies_received,
             sum(request_bytes_sent), sum(request_bytes_received), sum(request_data_sent),
-            sum(request_data_received), statistics.mean(round_trips)*-1000, thruput/-1000, goodput/-1000, statistics.mean(delays)*-1000000,
+            sum(request_data_received), statistics.mean(round_trips) * -1000, thruput / -1000, goodput / -1000,
+            statistics.mean(delays) * -1000000,
             statistics.mean(hops))
