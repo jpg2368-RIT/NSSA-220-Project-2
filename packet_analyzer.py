@@ -23,7 +23,7 @@ def main():
         parsed_metrics = parse(filtered_packets_file)
         computed_metrics = compute(parsed_metrics, node_ips[i])
 
-        table_format = (
+        node_format = (
             ('Echo Requests Sent', 'Echo Requests Received', 'Echo Replies Sent', 'Echo Replies Received'),
             (computed_metrics[0], computed_metrics[1], computed_metrics[2], computed_metrics[3]),
             ('Echo Request Bytes Sent', 'Echo Request Data Sent'),
@@ -38,10 +38,10 @@ def main():
             ('Average Echo Request Hop Count', f'{computed_metrics[12]:.3f}'))
 
         print(f"Node {i+1} metrics:")
-        for row in table_format:
+        for row in node_format:
             print("\t", end="")
             for i, col in enumerate(row):
-                print(f"{col:<{variable_col_width(table_format, i)}}", end="")
+                print(f"{col:<{variable_col_width(node_format, i)}}", end="")
             print()
         print(" ========================================================\n")
 
