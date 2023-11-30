@@ -28,7 +28,7 @@ def main():
         print(f"\tGoodput:\t{computed_metrics[10]}")
         print(f"\tAverage reply delay:\t{computed_metrics[11]} microseconds")
         print("")
-        print(f"\tAverage hops:{computed_metrics[12]}")
+        print(f"\tAverage hops:\t{computed_metrics[12]}")
         print(" ========================================================")
         print("\n")
 
