@@ -18,7 +18,7 @@ def between(string, char1, char2):
 def find_packet_from_seq(packets, seq):
     for packet in packets:
         split_info = packet["Info"].split(" ")
-        if int(between(split_info[3], "=", "/")) == int(seq):
+        if int(between(split_info[4], "=", "/")) == int(seq):
             return packet
 
 
@@ -46,37 +46,37 @@ def compute(packets, ip):
     rec_request_packets = []
 
     # input: ['No.', 'Time', 'Source', 'Destination', 'Protocol', 'Length', 'Info', 'Hex']
-
+    HEADER_SIZE = 42
     for packet in packets:
         split_info = packet["Info"].split(" ")
         # Data size metrics
         # ==========================
         # num echo requests sent, request bytes sent, request data sent
-        if split_info[1] == "request" and packet["Source"] == str(ip):
+        if split_info[2] == "request" and packet["Source"] == str(ip):
             num_echo_requests_sent += 1
             # Total request bytes sent
             request_bytes_sent.append(int(packet["Length"]))
-            request_data_sent.append(int(packet["Length"]) - 42)
+            request_data_sent.append(int(packet["Length"]) - HEADER_SIZE)
             open_request_packets.append(packet)
 
         # num echo requests received, request bytes received, request data received
-        if split_info[1] == "request" and packet["Destination"] == str(ip):
+        if split_info[2] == "request" and packet["Destination"] == str(ip):
             num_echo_requests_received += 1
             # total request bytes received
             request_bytes_received.append(int(packet["Length"]))
-            request_data_received.append(int(packet["Length"]) - 42)
+            request_data_received.append(int(packet["Length"]) - HEADER_SIZE)
             rec_request_packets.append(packet)
 
         # num echo replies sent
-        if split_info[1] == "reply" and packet["Source"] == str(ip):
+        if split_info[2] == "reply" and packet["Source"] == str(ip):
             num_echo_replies_sent += 1
-            other = find_packet_from_seq(rec_request_packets, split_info[7][:-1])
+            other = find_packet_from_seq(rec_request_packets, split_info[8][:-1])
             delays.append(float(other["Time"]) - float(packet["Time"]))
 
         # num echo replies received
-        if split_info[1] == "reply" and packet["Destination"] == str(ip):
+        if split_info[2] == "reply" and packet["Destination"] == str(ip):
             num_echo_replies_received += 1
-            other = find_no(open_request_packets, split_info[7][:-1])
+            other = find_no(open_request_packets, split_info[8][:-1])
             round_trips.append(float(other["Time"]) - float(packet["Time"]))
 
         # Distance metric
