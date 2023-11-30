@@ -2,7 +2,7 @@ import re
 import os
 
 
-# check if file exist and is pcap, then create filtered txt
+# check if file exist, then create filtered txt
 def filter(path, layer):
     if not os.path.isfile:
         return False
