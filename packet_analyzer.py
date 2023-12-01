@@ -23,6 +23,7 @@ def main():
     for i in range(num_nodes):
         filtered_packets_file = filter(f"./Captures/Node{i + 1}.txt", "ICMP")
         parsed_metrics = parse(filtered_packets_file)
+        parse_info(parsed_metrics)
         computed_metrics = compute(parsed_metrics, node_ips[i])
 
         node_format = (
