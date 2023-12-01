@@ -10,6 +10,12 @@ def parse(path):
     return packets
 
 
+# Parsed Info: {
+# 'Packet Type': str, 
+# 'id': str, 
+# 'seq': [int, int], 
+# 'ttl': int, 
+# 'No. pointer': int}
 # Only parse when packet is either request or reply for successfull ICMP
 def parse_info(packets, parse_type = True):
     for packet in packets:
@@ -74,7 +80,7 @@ def packet_dictionary(packet, parse_type = True):
 
 def main():
     packets = parse("./Captures/Node1_filtered.txt")
-    parse_info(packet)
+    parse_info(packets)
 
     for packet in packets:
         for key, value in packet.items():
