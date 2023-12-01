@@ -2,7 +2,7 @@ from filter_packets import *
 from packet_parser import *
 from compute_metrics import *
 
-
+# find highest character count of a particular column and add spacing
 def variable_col_width(table_format, col_index, space_between=5):
     max_col_width = 0
     for cols in table_format:

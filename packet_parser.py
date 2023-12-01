@@ -68,6 +68,7 @@ def packet_dictionary(packet, parse_type = True):
         else:
             if "Hex" not in packet_dict:
                 packet_dict["Hex"] = ""
+            # Gather only the hex content
             for j in range(1, len(cleaned_lines[i]) - 1):
                 packet_dict["Hex"] += cleaned_lines[i][j] + " "
         if parse_type:
