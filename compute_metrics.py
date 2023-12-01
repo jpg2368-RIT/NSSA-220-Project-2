@@ -97,6 +97,6 @@ def compute(packets, ip):
     return (
         num_echo_requests_sent, num_echo_requests_received, num_echo_replies_sent, num_echo_replies_received,
         sum(request_bytes_sent), sum(request_bytes_received), sum(request_data_sent),
-        sum(request_data_received), statistics.mean(round_trips) * -1000, thruput / -1000, goodput / -1000,
-        statistics.mean(delays) * -1000000,
+        sum(request_data_received), statistics.mean(round_trips)*-1000, thruput/-1000, goodput/-1000,
+        statistics.mean(delays)*-1000000,
         statistics.mean(hops))
